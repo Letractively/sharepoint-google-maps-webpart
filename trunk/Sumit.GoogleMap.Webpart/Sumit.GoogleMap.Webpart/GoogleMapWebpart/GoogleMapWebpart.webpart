@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<webParts>
+  <webPart xmlns="http://schemas.microsoft.com/WebPart/v3">
+    <metaData>
+      <type name="Sumit.GoogleMap.Webpart.GoogleMapWebpart.GoogleMapWebpart, $SharePoint.Project.AssemblyFullName$" />
+      <importErrorMessage>$Resources:core,ImportErrorMessage;</importErrorMessage>
+    </metaData>
+    <data>
+      <properties>
+        <property name="Title" type="string">Google Map Webpart</property>
+        <property name="Description" type="string">Google Map Webpart by - Sumit Kanchan</property>
+      </properties>
+    </data>
+  </webPart>
+</webParts>
