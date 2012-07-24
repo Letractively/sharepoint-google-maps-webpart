@@ -13,6 +13,7 @@ namespace Sumit.GoogleMap.Webpart.GoogleMapWebpart
             GoogleMapWebpart.tbLattitudeID = tbLattitude.ClientID;
             GoogleMapWebpart.tbLongitudeID = tbLongitude.ClientID;
             GoogleMapWebpart.tbAddressID = tbAddress.ClientID;
+            GoogleMapWebpart.tbTitleID = tbTitle.ClientID;
         }
     }
 }

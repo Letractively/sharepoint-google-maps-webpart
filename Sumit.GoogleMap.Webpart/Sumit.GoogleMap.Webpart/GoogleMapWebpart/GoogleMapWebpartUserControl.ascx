@@ -19,6 +19,9 @@
     var tbLng_Id = " ";
     var tbAddress_ID = " ";
     var hfAdd_Id = " ";
+    var tbTitle_ID = " ";
+    var hfTitle_Id = " ";
+    var titleValue = " ";
 
     function geocodePosition(pos) {
         geocoder.geocode({
@@ -62,7 +65,7 @@
         });
         var marker = new google.maps.Marker({
             position: latLng,
-            title: 'Point A',
+            title: titleValue,
             map: map,
             draggable: true
         });
@@ -87,18 +90,24 @@
         });
     }
 
-
-    function ShowDragableMarkerMap(hf, lat, long, tblat, tblng, tbAddress, hf_Add, addValue) {
+    //Show Editable Google Map
+    function ShowDragableMarkerMap(hf, latlong, tblatlng, AddID, addValue, titleID, titlValue) {
         hf_Id = hf;
-        lattitude = lat;
-        longitude = long;
-        tbLat_Id = tblat;
-        tbLng_Id = tblng;
-        tbAddress_ID = tbAddress;
-        hfAdd_Id = hf_Add;
+        lattitude = latlong.split(",")[0];
+        longitude = latlong.split(",")[1];
+        tbLat_Id = tblatlng.split(",")[0];
+        tbLng_Id = tblatlng.split(",")[1];
+        tbAddress_ID = AddID.split(",")[0];
+        hfAdd_Id = AddID.split(",")[1];
+        tbTitle_ID = titleID.split(",")[0];
+        hfTitle_Id = titleID.split(",")[1];
+        titleValue = titlValue;
 
         //SHow the stored address
         document.getElementById(tbAddress_ID).value = addValue;
+
+        //SHow the stored Title
+        document.getElementById(tbTitle_ID).value = titleValue;
 
         // Onload handler to fire off the app.
         google.maps.event.addDomListener(window, 'load', initialize);
@@ -107,6 +116,31 @@
     function AddChanged(textControl) {
         document.getElementById(tbAddress_ID).value = textControl.value;
         document.getElementById(hfAdd_Id).value = textControl.value;
+    }
+
+    function TitleChanged(textControlTitle) {
+        document.getElementById(tbTitle_ID).value = textControlTitle.value;
+        document.getElementById(hfTitle_Id).value = textControlTitle.value;
+    }
+
+    //Show Non-Editable Google Map
+    function ShowMap(src) {
+        document.getElementById("mapCanvas").style.display = "none";
+        document.getElementById("infoPanel").style.display = "none";
+        document.getElementById("outerDiv").style.width = 714 + "px";
+        document.getElementById("outerDiv").style.height = 310 + "px";
+        ifrm = document.createElement("IFRAME");
+        ifrm.src = src;
+        ifrm.style.width = 714 + "px";
+        ifrm.style.height = 306 + "px";
+        ifrm.scrolling = "no";
+        ifrm.allowtransparency = "true";
+        ifrm.frameborder = 0 + "px";
+        ifrm.marginwidth = 0 + "px";
+        ifrm.marginheight = 0 + "px";
+        ifrm.style.border = 0 + "px ";
+        ifrm.style.margin = 5 + "px " + 0 + "px " + 0 + "px " + 0 + "px";
+        document.getElementById('dvGoogleMap').appendChild(ifrm);
     }
 
 </script>
@@ -149,10 +183,12 @@
     }
 </style>
 
-<div class="outerDiv">
+<div class="outerDiv" id="outerDiv">
     <div id="mapCanvas">
     </div>
-    <table width="100%" class="info">
+    <div id="dvGoogleMap">
+    </div>
+    <table width="100%" class="info" id="infoPanel">
         <tr>
             <td class="fltlft" colspan="2">
                 <asp:Label Text="Lattitude" ID="Lattitudelbl" runat="server"></asp:Label>
@@ -165,8 +201,15 @@
         </tr>
         <tr>
             <td class="adddiv">
-                <asp:Label Text="Address" ID="Addresslbl" runat="server"></asp:Label>
-                <asp:TextBox ID="tbAddress" runat="server" Text="Your Location Address" Width="870%"
+                <asp:Label Text="Title" ID="Titlelbl" runat="server" Width="9%"></asp:Label>
+                <asp:TextBox ID="tbTitle" runat="server" Text="Your Location Title" Width="88.5%"
+                    onchange="TitleChanged(this);"></asp:TextBox>
+            </td>
+        </tr>
+        <tr>
+            <td class="adddiv">
+                <asp:Label Text="Address" ID="Addresslbl" runat="server" Width="9%"></asp:Label>
+                <asp:TextBox ID="tbAddress" runat="server" Text="Your Location Address" Width="88.5%"
                     onchange="AddChanged(this);"></asp:TextBox>
             </td>
         </tr>
