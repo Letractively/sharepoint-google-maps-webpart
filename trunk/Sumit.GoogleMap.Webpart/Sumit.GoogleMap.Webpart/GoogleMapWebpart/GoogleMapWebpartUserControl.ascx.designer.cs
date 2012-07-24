@@ -49,6 +49,24 @@ namespace Sumit.GoogleMap.Webpart.GoogleMapWebpart {
         protected global::System.Web.UI.WebControls.TextBox tbLongitude;
         
         /// <summary>
+        /// Titlelbl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Titlelbl;
+        
+        /// <summary>
+        /// tbTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbTitle;
+        
+        /// <summary>
         /// Addresslbl control.
         /// </summary>
         /// <remarks>

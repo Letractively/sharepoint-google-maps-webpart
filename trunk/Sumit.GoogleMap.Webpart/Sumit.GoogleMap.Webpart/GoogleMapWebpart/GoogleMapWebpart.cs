@@ -73,17 +73,38 @@ namespace Sumit.GoogleMap.Webpart.GoogleMapWebpart
                 _address = value;
             }
         }
+
+        private string _gmTitle = "Your Location Title";
+        [WebBrowsable(false),
+        Category("Google Map Settings"),
+        Personalizable(PersonalizationScope.Shared),
+        Description("Location Title"),
+        WebDisplayName("Title")]
+        public string GMTitle
+        {
+            get
+            {
+                return _gmTitle;
+            }
+            set
+            {
+                _gmTitle = value;
+            }
+        }
         #endregion
 
         #region Global Declaration
         public static string tbLattitudeID = string.Empty;
         public static string tbLongitudeID = string.Empty;
         public static string tbAddressID = string.Empty;
+        public static string tbTitleID = string.Empty;
         private string tempAddValue = string.Empty;
         private string tempLatValue = string.Empty;
         private string tempLngValue = string.Empty;
+        private string tempTitleValue = string.Empty;
         private bool isLocationChngd = false;
         private bool isAddressChngd = false;
+        private bool isTitleChngd = false;
         #endregion
 
 
@@ -111,27 +132,50 @@ namespace Sumit.GoogleMap.Webpart.GoogleMapWebpart
 
             #region Create Hidden Field
 
+            //Hidden Field to store Lattitude and longitude
             HiddenField hfLatLong = new HiddenField();
             hfLatLong.Value = this.Lattitude + "," + this.Longitude;
             Controls.Add(hfLatLong);
 
+            //Hidden Field to store Address
             HiddenField hfAddress = new HiddenField();
-            hfLatLong.Value = this.Address;
+            hfAddress.Value = this.Address;
             Controls.Add(hfAddress);
 
+            //Hidden Field to store Title
+            HiddenField hfTitle = new HiddenField();
+            hfTitle.Value = this.GMTitle;
+            Controls.Add(hfTitle);
+
             //Store the control Id in ViewState
-            ViewState[Constants.Hidden_Field_Location_Key] = SerializeString(hfLatLong.ClientID);
-            ViewState[Constants.Hidden_Field_Address_Key] = SerializeString(hfAddress.ClientID);
+            ViewState[Constants.HIDDEN_FIELD_LOCATION_KEY] = SerializeString(hfLatLong.ClientID);
+            ViewState[Constants.HIDDEN_FIELD_ADDRESS_KEY] = SerializeString(hfAddress.ClientID);
+            ViewState[Constants.HIDDEN_FIELD_TITLE_KEY] = SerializeString(hfTitle.ClientID);
 
             #endregion
 
             #region Register Draggable Map Script
 
-            ScriptManager.RegisterStartupScript(this, GetType(), "ShowEditableMap", "ShowDragableMarkerMap('" + SerializeString(hfLatLong.ClientID) + "','"
-                + SerializeString(this.Lattitude) + "','" + SerializeString(this.Longitude) + "','" + SerializeString(tbLattitudeID)
-                + "','" + SerializeString(tbLongitudeID) + "','" + SerializeString(tbAddressID) + "','" + SerializeString(hfAddress.ClientID)
-                + "','" + SerializeString(this.Address) + "')", true);
+            if (this.WebPartManager.DisplayMode == WebPartManager.EditDisplayMode)
+            {
 
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowEditableMap", "ShowDragableMarkerMap('" + SerializeString(hfLatLong.ClientID)
+                    + "','" + SerializeString(this.Lattitude + "," + this.Longitude)
+                    + "','" + SerializeString(tbLattitudeID + "," + tbLongitudeID)
+                    + "','" + SerializeString(tbAddressID + "," + hfAddress.ClientID)
+                    + "','" + SerializeString(this.Address)
+                    + "','" + SerializeString(tbTitleID + "," + hfTitle.ClientID)
+                    + "','" + SerializeString(this.GMTitle)
+                    + "')", true);
+            }
+            else
+            {
+                string latlan = this.Lattitude + "%2C" + this.Longitude;
+
+                string googleMapSrc = "http://www.google.com/uds/modules/elements/mapselement/iframe.html?maptype=roadmap&latlng=" + latlan + "&mlatlng=" + latlan + "&maddress1=" + this.Address + "&zoom=9&mtitle=" + this.GMTitle + "&element=true";
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowGoogleMaps", "ShowMap('" + googleMapSrc + "');", true);
+            }
             #endregion
         }
 
@@ -175,7 +219,10 @@ namespace Sumit.GoogleMap.Webpart.GoogleMapWebpart
                         {
                             ((Sumit.GoogleMap.Webpart.GoogleMapWebpart.GoogleMapWebpart)(objCurrentWebPart.WebBrowsableObject)).Address = this.Address;
                         }
-
+                        if (isTitleChngd)
+                        {
+                            ((Sumit.GoogleMap.Webpart.GoogleMapWebpart.GoogleMapWebpart)(objCurrentWebPart.WebBrowsableObject)).GMTitle = this.GMTitle;
+                        }
                         //Save Changes
                         try
                         {
@@ -197,6 +244,7 @@ namespace Sumit.GoogleMap.Webpart.GoogleMapWebpart
             //get the value from the Hidden Variable
             GetHiddenFieldValue();
 
+            //Address
             if (!tempAddValue.Equals(this.Address))
             {
                 isAddressChngd = true;
@@ -204,6 +252,15 @@ namespace Sumit.GoogleMap.Webpart.GoogleMapWebpart
                     this.Address = tempAddValue;
             }
 
+            //Title
+            if (!tempTitleValue.Equals(this.GMTitle))
+            {
+                isTitleChngd = true;
+                if (!string.IsNullOrEmpty(tempTitleValue))
+                    this.GMTitle = tempTitleValue;
+            }
+
+            //Lattitude and Longitude
             if (!tempLatValue.Equals(this.Lattitude) || !tempLngValue.Equals(this.Longitude))
             {
                 isAddressChngd = true;
@@ -225,12 +282,15 @@ namespace Sumit.GoogleMap.Webpart.GoogleMapWebpart
         {
             bool isAddKeyFound = false;
             bool isLocKeyFound = false;
+            bool isTitleKeyFound = false;
 
             //Check if the there's any key in the form
             if (HttpContext.Current.Request.Form.Keys.Count > 0)
             {
                 //Check if the View State holding the Hidden Variable Id is not null
-                if (ViewState[Constants.Hidden_Field_Address_Key] != null || ViewState[Constants.Hidden_Field_Location_Key] != null)
+                if (ViewState[Constants.HIDDEN_FIELD_ADDRESS_KEY] != null
+                    || ViewState[Constants.HIDDEN_FIELD_LOCATION_KEY] != null
+                    || ViewState[Constants.HIDDEN_FIELD_TITLE_KEY] != null)
                 {
                     int index = 0;
 
@@ -239,19 +299,24 @@ namespace Sumit.GoogleMap.Webpart.GoogleMapWebpart
                     {
                         string keyID = key.Replace("$", "_");
 
-                        if (keyID.Equals(Convert.ToString(ViewState[Constants.Hidden_Field_Location_Key])))
+                        if (!isLocKeyFound && keyID.Equals(Convert.ToString(ViewState[Constants.HIDDEN_FIELD_LOCATION_KEY])))
                         {
                             isLocKeyFound = true;
                             tempLatValue = HttpContext.Current.Request.Form[index].Split(',')[0];
                             tempLngValue = HttpContext.Current.Request.Form[index].Split(',')[1];
                         }
-                        else if (keyID.Equals(Convert.ToString(ViewState[Constants.Hidden_Field_Address_Key])))
+                        else if (!isAddKeyFound && keyID.Equals(Convert.ToString(ViewState[Constants.HIDDEN_FIELD_ADDRESS_KEY])))
                         {
                             isAddKeyFound = true;
                             tempAddValue = HttpContext.Current.Request.Form[index];
                         }
+                        else if (!isTitleKeyFound && keyID.Equals(Convert.ToString(ViewState[Constants.HIDDEN_FIELD_TITLE_KEY])))
+                        {
+                            isTitleKeyFound = true;
+                            tempTitleValue = HttpContext.Current.Request.Form[index];
+                        }
 
-                        if (isLocKeyFound && isAddKeyFound)
+                        if (isLocKeyFound && isAddKeyFound & isTitleKeyFound)
                         {
                             break;
                         }
