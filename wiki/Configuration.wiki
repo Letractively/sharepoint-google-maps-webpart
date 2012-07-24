@@ -7,9 +7,7 @@ This guide helps to configure the !WebPart on the !SharePoint 2010 portal
 
 = Configuration =
 
-  # Add the !WebPart from the !webpart gallery to the desired page, found under the _"Sumit"_ category
-  <br/>
-  https://sharepoint-google-maps-webpart.googlecode.com/svn/wiki/Images/WebpartGallery.jpg<br/>
+  # Add the !WebPart from the !webpart gallery to the desired page, found under the _"Sumit"_ category <br/>https://sharepoint-google-maps-webpart.googlecode.com/svn/wiki/Images/WebpartGallery.jpg<br/>  
   # As soon as the !webpart is added default location will be shown
   # To configure the location edit the webpart <br/>https://sharepoint-google-maps-webpart.googlecode.com/svn/wiki/Images/GMShowEdit.jpg<br/>  
   # Now you will find that the marker in the map is a draggable one.<br/>https://sharepoint-google-maps-webpart.googlecode.com/svn/wiki/Images/EditWebPart.jpg<br/>  
