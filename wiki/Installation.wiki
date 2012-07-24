@@ -1,13 +1,24 @@
-#summary One-sentence summary of this page.
+#summary This guide helps in the installation of the !SharePoint Google Map !WebPart
 
 = Introduction =
 
-Add your content here.
+This guide will help you in installing and configuring the weather web-part step by step.
+
+= Prerequisites =
+
+  * !SharePoint 2010 Environment
+  * Internet Connection to interact with the Google Map API's
+
+= Step 1: Installing Solution =
+
+  * [http://code.google.com/p/sharepoint-google-maps-webpart/downloads/list Download] WSP and unzip the Weather Web-Part archive. This contains the WSP file, deploy solution batch file, upgrade solution batch file and retract solution batch file
+  * Edit the Deploy Solution  batch file and update the server URL property on which want to install the package if solution is bieng added for the first time otherwise execute the upgrade batch file
+https://sharepoint-google-maps-webpart.googlecode.com/svn/wiki/Images/deployURL.jpg
+  * Right click on the Deploy file and select the "Run as administrator" option
+https://sharepoint-google-maps-webpart.googlecode.com/svn/wiki/Images/Install.jpg
+  * This will add the solution in the solution gallery
+https://sharepoint-google-maps-webpart.googlecode.com/svn/wiki/Images/Solution.jpg
+  * This will also deploy the feature in site collection features gallery on specified web portal url
 
 
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+  * [http://code.google.com/p/sharepoint-google-maps-webpart/wiki/Configuration Configure] your webpart
