@@ -154,7 +154,7 @@ namespace Sumit.GoogleMap.Webpart.GoogleMapWebpart
 
             #endregion
 
-            #region Register Draggable Map Script
+            #region Register Map Script
 
             if (this.WebPartManager.DisplayMode == WebPartManager.EditDisplayMode)
             {
