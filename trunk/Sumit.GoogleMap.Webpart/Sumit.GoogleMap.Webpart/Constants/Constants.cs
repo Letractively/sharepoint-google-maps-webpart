@@ -9,8 +9,9 @@ namespace Sumit.GoogleMap.Webpart
     {
         #region ViewState
 
-        public const string Hidden_Field_Address_Key = "hf_LatLng_Value";
-        public const string Hidden_Field_Location_Key = "hf_Address_Value";
+        public const string HIDDEN_FIELD_ADDRESS_KEY = "hf_LatLng_Value";
+        public const string HIDDEN_FIELD_LOCATION_KEY = "hf_Address_Value";
+        public const string HIDDEN_FIELD_TITLE_KEY = "hf_Title_Value";
 
         #endregion
     }
